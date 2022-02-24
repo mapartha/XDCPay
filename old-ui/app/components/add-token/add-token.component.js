@@ -47,14 +47,17 @@ class AddTokenScreen extends Component {
       warning: null,
       customAddress: '',
       customSymbol: '',
-      customDecimals: '',
+      customDecimals: 0,
       searchResults: [],
       selectedTokens: {},
       tokenSelectorError: null,
-      customAddressError: true,
-      customSymbolError: true,
-      customDecimalsError: true,
+      customAddressError: null,
+      customSymbolError: null,
+      customDecimalsError: null,
       autoFilled: false,
+      forceEditSymbol: false,
+    symbolAutoFilled: false,
+    decimalAutoFilled: false,
       displayedTab: SEARCH_TAB,
     }
     Component.call(this)
@@ -83,10 +86,10 @@ class AddTokenScreen extends Component {
       const {
         address: customAddress = '',
         symbol: customSymbol = '',
-        decimals: customDecimals = '',
+        decimals: customDecimals = 0,
       } = customToken
 
-      const displayedTab = Object.keys(selectedTokens).length > 0 ? SEARCH_TAB : CUSTOM_TOKEN_TAB
+      // const displayedTab = Object.keys(selectedTokens).length > 0 ? SEARCH_TAB : CUSTOM_TOKEN_TAB
       this.setState({ selectedTokens, customAddress, customSymbol, customDecimals, displayedTab })
     }
   }
@@ -97,8 +100,7 @@ class AddTokenScreen extends Component {
     const {goHome} = props
     const networkID = parseInt(network)
     let views = []
-    const isProdNetworkWithKnownTokens = networkID === MAINNET_CODE ||
-                                         networkID === POA_CODE
+    const isProdNetworkWithKnownTokens = networkID === MAINNET_CODE || networkID === POA_CODE
     isProdNetworkWithKnownTokens ? views = [h(TabBar, {
       style: {
         paddingTop: '0px',
@@ -170,7 +172,7 @@ class AddTokenScreen extends Component {
   renderAddToken () {
     const props = this.props
     const state = this.state
-    const { warning, customAddress, customSymbol, customDecimals, autoFilled } = state
+    const { warning, customAddress, customSymbol, customDecimals, customDecimalsError, autoFilled } = state
     const { network, goHome, addToken } = props
     return h('.flex-column.flex-justify-center.flex-grow.select-none', [
         warning ? h('div', {
@@ -194,27 +196,28 @@ class AddTokenScreen extends Component {
 
         h('div', {style:{marginTop: '24px'}},[
           // h(Tooltip, {
-          //   position: 'top',
-          //   title: 'The contract of the actual token contract.',
-          // }, [
-            h('span', {
-              style: { fontWeight: 'bold',fontSize: '12px',},
-            }, 'Token Address' /* this.context.t('tokenAddress')*/),
-          // ]),
-        ]),
-
-        h('section.flex-row.flex-center', [
-          h('input.large-input#token-address', {
-            name: 'address',
-            placeholder: 'Token Contract Address',
-            value: customAddress,
-            style: {
-              width: '100%',
-              marginTop: '-4px',
-              border: '2px solid #c7cdd8',
-              borderRadius: '4px',
-            },
-            onChange: e => this.handleCustomAddressChange(e.target.value),
+            //   position: 'top',
+            //   title: 'The contract of the actual token contract.',
+            // }, [
+              h('span', {
+                style: { fontWeight: 'bold',fontSize: '12px',},
+              }, 'Token Address' /* this.context.t('tokenAddress')*/),
+              // ]),
+            ]),
+            
+            h('section.flex-row.flex-center', [
+              h('input.large-input#token-address', {
+                name: 'address',
+                placeholder: 'Token Contract Address',
+                value: customAddress,
+                style: {
+                  width: '100%',
+                  marginTop: '-4px',
+                  border: '2px solid #c7cdd8',
+                  borderRadius: '4px',
+                },
+                onChange: e => this.handleCustomAddressChange(e.target.value),
+                  // this.addSuggestedERC20Asset(e.target.value) },
           }),
         ]),
 
@@ -233,8 +236,8 @@ class AddTokenScreen extends Component {
               marginTop: '-4px',
               border: '2px solid #c7cdd8',
               borderRadius: '4px',
+              onChange: e => this.handleCustomSymbolChange(e.target.value),
             },
-            onChange: e => this.handleCustomSymbolChange(e.target.value),
           }),
         ]),
 
@@ -248,16 +251,18 @@ class AddTokenScreen extends Component {
           h('input.large-input#token_decimals', {
             placeholder: '0',
             value: customDecimals,
+            readOnly: true,
             type: 'number',
             min: 0,
             max: 36,
+            // onChange: e => this.handleCustomDecimalsChange(e.target.value),
             style: {
               width: '100%',
               marginTop: '-4px',
               border: '2px solid #c7cdd8',
               borderRadius: '4px',
             },
-            onChange: e => this.handleCustomDecimalsChange(e.target.value),
+            error: customDecimals ? customDecimalsError : null ,  
           }),
         ]),
 
@@ -393,9 +398,9 @@ class AddTokenScreen extends Component {
     }
 
     const symbolLen = symbol.trim().length
-    const validSymbol = symbolLen > 0 && symbolLen < 10
+    const validSymbol = symbolLen > 0 
     if (!validSymbol) {
-      msg += 'Symbol must be between 0 and 10 characters.'
+      msg += 'Symbol can not be empty.'
     }
 
     let ownAddress = identitiesList.includes(standardAddress)
@@ -444,15 +449,30 @@ class AddTokenScreen extends Component {
       customAddressError,
       customSymbolError,
       customDecimalsError,
-    } = this.state
+    } = this.state;
 
-    return tokenSelectorError || customAddressError || customSymbolError || customDecimalsError
+    return (
+      tokenSelectorError ||
+      customAddressError ||
+      customSymbolError ||
+      customDecimalsError
+    );
+    // const {
+    //   tokenSelectorError,
+    //   customAddressError,
+    //   customSymbolError,
+    //   customDecimalsError,
+    // } = this.state
+
+    // return tokenSelectorError || customAddressError || customSymbolError || customDecimalsError
   }
 
   hasSelected = () => {
-    const { customAddress = '', customDecimals = '', customSymbol = '', selectedTokens = {} } = this.state
-    const validDecimals = this.isValidDecimals(customDecimals)
-    return (customAddress && validDecimals && customSymbol) || Object.keys(selectedTokens).length > 0
+    const { customAddress = '', selectedTokens = {} } = this.state;
+    return customAddress || Object.keys(selectedTokens).length > 0;
+    // const { customAddress = '', customDecimals = '', customSymbol = '', selectedTokens = {} } = this.state
+    // const validDecimals = this.isValidDecimals(customDecimals)
+    // return (customAddress && validDecimals && customSymbol) || Object.keys(selectedTokens).length > 0
   }
 
   handleNext = () => {
@@ -480,15 +500,17 @@ class AddTokenScreen extends Component {
     showConfirmAddTokensPage()
   }
 
-  attemptToAutoFillTokenParams = async (address) => {
+  async attemptToAutoFillTokenParams (address) {
     const { symbol = '', decimals = '' } = await this.tokenInfoGetter(address)
-
-    const autoFilled = Boolean(symbol && decimals)
-    this.setState({
-      autoFilled,
-      warning: '',
-      customAddressError: null,
-    })
+    const symbolAutoFilled = Boolean(symbol);
+    const decimalAutoFilled = Boolean(decimals);
+    this.setState({ symbolAutoFilled, decimalAutoFilled });
+    // const autoFilled = Boolean(symbol && decimals)
+    // this.setState({
+    //   autoFilled,
+    //   warning: '',
+    //   customAddressError: null,
+    // })
     this.handleCustomSymbolChange(symbol || '')
     this.handleCustomDecimalsChange(decimals || '')
   }
@@ -501,22 +523,24 @@ class AddTokenScreen extends Component {
       customAddress,
       customAddressError: null,
       tokenSelectorError: null,
-      autoFilled: false,
+      // autoFilled: false,
+      symbolAutoFilled: false,
+      decimalAutoFilled: false,
     })
 
     customAddress = customAddress.replace('xdc', '0x').toLowerCase();
-    const isValidAddress = isValidAddress(customAddress, network)
+    const validAddress = isValidAddress(customAddress, network)
     const standardAddress = ethUtil.addHexPrefix(customAddress).toLowerCase()
 
     let warning
     switch (true) {
-      case !isValidAddress:
+      case !validAddress:
         warning = 'Invalid address'
         this.setState({
           warning,
           customAddressError: warning /* this.context.t('invalidAddress')*/,
           customSymbol: '',
-          customDecimals: null,
+          customDecimals: 0,
           customSymbolError: null,
           customDecimalsError: null,
         })
@@ -534,7 +558,7 @@ class AddTokenScreen extends Component {
           this.attemptToAutoFillTokenParams(customAddress)
         }
         break
-      case checkExistingAddresses(customAddress, tokens):
+      case checkExistingAddresses(customAddress,this.props.tokens):
         warning = 'Token has already been added.'
         this.setState({
           warning,
@@ -554,8 +578,8 @@ class AddTokenScreen extends Component {
     const symbolLength = customSymbol.length
     let customSymbolError = null
 
-    if (symbolLength <= 0 || symbolLength >= 10) {
-      customSymbolError = 'Symbol must be between 0 and 10 characters.' /* this.context.t('symbolBetweenZeroTen')*/
+    if (symbolLength <= 0 ) {
+      customSymbolError = 'Symbol can not be empty.' /* this.context.t('symbolBetweenZeroTen')*/
     }
 
     this.setState({ customSymbol, customSymbolError })
@@ -573,6 +597,8 @@ class AddTokenScreen extends Component {
 
     this.setState({ customDecimals, customDecimalsError })
   }
+
+  
 
   /**
    * Returns validity status of token decimals

@@ -1,3 +1,4 @@
+const ethNetProps = require('../../../../xdc-net-props')
 const POA = 'poa'
 const DAI = 'dai'
 const POA_SOKOL = 'sokol'
@@ -23,7 +24,7 @@ const GOERLI_TESTNET_CODE = 5
 const CLASSIC_CODE = 61
 const XDC_CODE = 50
 const XDC_TESTNET_CODE = 51
-const XDC_DEVNET_CODE =  551
+const XDC_DEVNET_CODE = 551
 
 const POA_DISPLAY_NAME = 'POA Core'
 const DAI_DISPLAY_NAME = 'xDai Chain'
@@ -51,12 +52,66 @@ const DROPDOWN_XDC_DISPLAY_NAME = 'XDC Mainnet'
 const DROPDOWN_XDC_TESTNET_DISPLAY_NAME = 'XDC Apothem Testnet'
 const DROPDOWN_XDC_DEVNET_DISPLAY_NAME = 'XDC Devnet'
 
+/* RPC Endpoints */
+// const XDC_RPC_ENDPOINT = 'https://rpc.xinfin.network'
+// const XDC_TESTNET_RPC_ENDPOINT = 'https://rpc.apothem.network'
+const XDC_RPC_ENDPOINT = 'https://xdcpayrpc.blocksscan.io/'
+const XDC_TESTNET_RPC_ENDPOINT = 'https://apothemxdcpayrpc.blocksscan.io/'
+const XDC_DEVNET_RPC_ENDPOINT = 'https://devnetrpc.apothem.network'
+
+/* Block Explorer URLs */
+const XDC_BLOCK_EXPLORER_URL = 'https://observer.xdc.org'
+// const XDC_BLOCK_EXPLORER_URL = 'https://explorer.xdc.network'
+const XDC_TESTNET_BLOCK_EXPLORER_URL = 'https://explorer.apothem.network'
+const XDC_DEVNET_BLOCK_EXPLORER_URL = 'https://explorer.devnet.network'
+
 const chainTypes = {
   TEST: 1,
   PROD: 2,
   TEST1: 3,
 
 }
+const permanentNetworks = [
+  {
+    name: XDC_DISPLAY_NAME,
+    rpcURL: XDC_RPC_ENDPOINT,
+    chainId: XDC_CODE,
+    currencySymbol: 'XDC',
+    blockExplorer: XDC_BLOCK_EXPLORER_URL,
+    providerType: XDC,
+    isPermanent: true,
+    colorCode: '#2049B9',
+  },
+  {
+    name: XDC_TESTNET_DISPLAY_NAME,
+    rpcURL: XDC_TESTNET_RPC_ENDPOINT,
+    chainId: XDC_TESTNET_CODE,
+    currencySymbol: 'XDC',
+    blockExplorer: XDC_TESTNET_BLOCK_EXPLORER_URL,
+    providerType: XDC_TESTNET,
+    isPermanent: true,
+    colorCode: '#2049B9',
+  },
+  {
+    name: XDC_DEVNET_DISPLAY_NAME,
+    rpcURL: XDC_DEVNET_RPC_ENDPOINT,
+    chainId: XDC_DEVNET_CODE,
+    currencySymbol: 'XDC',
+    blockExplorer: XDC_DEVNET_BLOCK_EXPLORER_URL,
+    providerType: XDC_DEVNET,
+    isPermanent: true,
+    colorCode: '#2049B9',
+  },
+  {
+    name: 'Localhost 8545',
+    rpcURL: 'https://localhost:8545',
+    chainId: '',
+    currencySymbol: '',
+    blockExplorer: '',
+    providerType: LOCALHOST,
+    isPermanent: false,
+    colorCode: '#0CB0BE',
+  }]
 
 module.exports = {
   POA,
@@ -109,4 +164,5 @@ module.exports = {
   DROPDOWN_XDC_TESTNET_DISPLAY_NAME,
   DROPDOWN_XDC_DEVNET_DISPLAY_NAME,
   chainTypes,
+  permanentNetworks,
 }

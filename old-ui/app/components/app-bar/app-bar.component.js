@@ -65,6 +65,8 @@ module.exports = class AppBar extends Component {
       identities,
       selectedAddress,
       keyrings,
+    networkList,
+    frequentRpcList
     } = this.props
 
     // Do not render header if user is in mascara onboarding
@@ -107,13 +109,15 @@ module.exports = class AppBar extends Component {
             <img
               height={24}
               width={24}
-              src={'./images/Assets/XDC-Icon@2x.png'}
+              src={'./images/Assets/XDC-icon@2x.png'}
               style={{
                 marginLeft: '3px',
               }}
             />
             <NetworkIndicator
               network={network}
+              networkList={networkList}
+              frequentRpcList={frequentRpcList}
               provider={provider}
               isUnlocked={isUnlocked}
               onClick={(event) => {
@@ -183,7 +187,7 @@ module.exports = class AppBar extends Component {
             <img
               height={24}
               width={24}
-              src={'./images/Assets/XDC-Icon-16X16.png'}
+              src={'./images/Assets/xdc-icon-16X16.png'}
             />
             <NetworkIndicator
               network={network}

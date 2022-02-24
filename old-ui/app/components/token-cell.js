@@ -24,12 +24,14 @@ function TokenCell () {
 }
 
 TokenCell.prototype.render = function () {
-  const { address, symbol, string, network, userAddress, isLastTokenCell, menuToTop, ind } = this.props
+  const { address, symbol, string, network, userAddress, isLastTokenCell, menuToTop, ind,
+  } = this.props
   const { optionsMenuActive } = this.state
 
   const tokenBalanceRaw = Number.parseFloat(string)
   const tokenBalance = tokenBalanceRaw.toFixed(countSignificantDecimals(tokenBalanceRaw, 2))
 
+  
   return (
     h(`li#token-cell_${ind}.token-cell`, {
       style: {
@@ -78,8 +80,8 @@ TokenCell.prototype.render = function () {
         onClick: this.send.bind(this, address),
       }, 'SEND'),
       */
-
     ])
+    
   )
 }
 
@@ -138,22 +140,21 @@ TokenCell.prototype.renderTokenOptions = function (menuToTop, ind) {
           closeMenu: () => {},
           onClick: () => {
             const { network } = this.props
-            const url = ethNetProps.explorerLinks.getExplorerTokenLinkFor(address.replace("0x", "xdc"),userAddress, network)
+            const url = ethNetProps.explorerLinks.getExplorerTokenLinkFor(address.replace("0x", "xdc"),userAddress, network,symbol)
             global.platform.openWindow({ url })
           },
         },[
           h('img',
           {className: 'token-options-icon', src: "/images/Assets/ViewOnExplorer.svg"},
           ),
-        `View token on block explorer`,]
+        network==50?`View token on observer`:'View token on block explorer',]
       ),
       h(
         DropdownMenuItem,
         {
           closeMenu: () => {},
           onClick: () => {
-            const checkSumAddress = address && toChecksumAddress(network, userAddress)
-            copyToClipboard(checkSumAddress)
+            copyToClipboard(address.replace("0x", "xdc"))
           },
         },[
           h('img',
@@ -204,6 +205,7 @@ const mapDispatchToProps = dispatch => {
   return {
     showSendTokenPage: (tokenAddress) => dispatch(actions.showSendTokenPage(tokenAddress)),
   }
+
 }
 
 module.exports = connect(null, mapDispatchToProps)(TokenCell)
