@@ -124,23 +124,28 @@ TransactionListItem.prototype.render = function () {
         if (isPending) {
           this.props.showTx(transaction.id)
         }
+        // else {
+        //   this.props.showTransctionDetails(transaction.id)
+        // }
         event.stopPropagation()
-        if (!transaction.hash || !isLinkable) return
-        const url = ethNetProps.explorerLinks.getExplorerTxLinkFor(transaction.hash, numericNet)
-        global.platform.openWindow({ url })
+        // if (!transaction.hash || !isLinkable) return
+        // const url = ethNetProps.explorerLinks.getExplorerTxLinkFor(transaction.hash, numericNet)
+        // global.platform.openWindow({ url })
       },
       style: {
         padding: '10px 0',
         alignItems: 'center',
       },
     }, [
-      h(`.flex-row.flex-space-between${isClickable ? '.pointer' : ''}`, {
+      h(`.flex-row.flex-space-between${isClickable ? '.pointer' : '.pointer'}`, {
         style: {
           width: '100%',
         },
       }, [
-        h('.identicon-wrapper.flex-column.flex-center.select-none', [
-          h(TransactionIcon, { txParams, transaction, isTx, isMsg }),
+        h('div.flex-row', {
+        }, [
+          h('.identicon-wrapper.flex-column.flex-center.select-none', [
+            h(TransactionIcon, { txParams, transaction, isTx, isMsg }),
         ]),
 
         // h(Tooltip, {
@@ -163,7 +168,7 @@ TransactionListItem.prototype.render = function () {
         h('.flex-column', {
           style: {
             textAlign: 'left',
-            marginRight: '74px',
+            marginLeft: '14px',
           },
         }, [
           domainField(txParams),
@@ -178,6 +183,7 @@ TransactionListItem.prototype.render = function () {
             },
           }, date),
         ]),
+      ]),
 
         isTx ? h(EthBalance, {
           valueStyle,

@@ -1,15 +1,17 @@
 {
   "objects": [
+    
     {
-            "symbol": "ethusd",
-            "base": {
-              "code": "eth",
-              "name": "Ethereum"
-            },
-            "quote": {
-              "code": "usd",
-              "name": "United States Dollar"
-            }
-          }
-
-  ]}
+      "symbol": "ethusd",
+      "base": {
+        "code": "eth",
+        "name": "Ethereum"
+      },
+      "quote": {
+        "code": "usd",
+        "name": "United States Dollar"
+      }
+    }
+    
+  ]
+}

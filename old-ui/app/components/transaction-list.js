@@ -44,8 +44,7 @@ TransactionList.prototype.render = function () {
       h('.tx-list', {
         style: {
           overflowY: 'auto',
-          height: '100%',
-          padding: '0 13px',
+          padding: '0 13px 20px 13px',
           textAlign: 'center',
         },
       }, [
@@ -67,6 +66,10 @@ TransactionList.prototype.render = function () {
               showTx: (txId) => {
                 this.props.viewPendingTx(txId)
               },
+              showTransctionDetails: (txId) => {
+                this.props.viewTxDetails(txId)
+              },
+             
             })
           })
         : h('.flex-center.full-flex-height', {
