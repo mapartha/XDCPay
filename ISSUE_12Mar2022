@@ -1,10 +1,10 @@
 If you are reporting a problem with XDCPay, please include the following information:
 
 ### What browser and version did you use?
-*Your answer*
+Chrome Version 98.0.4758.80 (Official Build) (64-bit)
 ### What operating system did you use?
-*Your answer*
+Ubuntu 16.04 LTS
 ### Do you have screenshots showing the problem?
-*Your answer*
+Yes
 ### What is your issue?
-*Your answer*
+Package is invalid. Details: 'Could not load icon 'images/Assets/xdc-icon.png' specified in 'browser_action'.'
